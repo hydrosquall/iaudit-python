@@ -1,1 +1,33 @@
-iaudit-python
+# iAudit INDaaS (Independence as a Service)
+## Private, Independent Audits of Alternative Inter-Cloud Replication Deployments 
+
+Customers of modern cloud services deploy replicas of their applications 
+in order to improve reliability and performance. These replicas may be spread 
+across multiple providers, such as Amazon AWS and Microsoft Azure.
+
+Shared vulnerabilities (both hardware and software) of providers can lead to 
+cascading failures, since the benefits of redundancy are lost. Despite this risk 
+to consumers, cloud providers are reluctant to share vulnerability information 
+with other providers. How can we let consumers achieve sufficient redundancy 
+in their application deployments, while also recognizing the business concerns
+of cloud providers?
+
+Introducing  **iAudit**. 
+
+**iAudit** is a system for computing the weighted shared dependency score
+between multiple cloud providers, which does not require any of the providers
+to disclose their vulnerabilities to the customer or competing providers. Lower
+score indicates higher independence. Higher independence scores indicate deployment schemes with higher  application reliability.
+
+There are two components to the system. This repository contains Python
+code for the second, with influence from the [Java](https://github.com/ennanzhai/auditor) implementation.
+
+1. Generation of provider dependency graphs
+2. Compute dependency scores using a Weighted Private Set Intersection Cardinality Protocol.
+
+Part of a senior project at Yale University.
+
+### iAudit Team
+- Project Lead: [Ennan Zhai, PhD](http://www.cs.yale.edu/homes/zhai-ennan/)
+- Advisor: [Profesor Avi Silberschatz](http://codex.cs.yale.edu/avi/)
+- Students: William Dower, [Cameron Yick](www.cameronyick.us)
