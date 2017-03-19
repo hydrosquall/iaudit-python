@@ -23,7 +23,7 @@ There are two components to the system. This repository contains Python
 code for the second, with influence from the [Java](https://github.com/ennanzhai/auditor) implementation.
 
 1. Generation of provider dependency graphs
-2. Compute dependency scores using a Weighted Private Set Intersection Cardinality Protocol.
+2. Compute dependency scores using a Weighted Private Set Intersection Cardinality Protocol (Vaidya and Clifton)
 
 Part of a senior project at Yale University.
 
