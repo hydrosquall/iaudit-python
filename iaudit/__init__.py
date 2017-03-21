@@ -16,6 +16,11 @@ from lxml import objectify
 # Handle multi-node deployment issues
 import network
 
+# encryption
+from Crypto.Hash import SHA, MD5 
+from Crypto.Util import number
+import mmh3 as murmur  # modern murmur hash
+
 class Cutset:
     """
         # Cutset of vulernabilities that would break
@@ -43,7 +48,6 @@ class CutsetList():
     """
         A collection of cutsets
         we will need a weighted representation of all the items inside.
-        Weights are not used inside the computation
     """
 
     def __init__(self, cutsets, isWeighted):
@@ -54,17 +58,23 @@ class CutsetList():
         def __str__(self):
             return "CutsetList[{}] Weight:{}".format(self.length, self.weighted)
 
-        self.weighted = isWeighted
+        # self.weighted = isWeighted
 
         # If using the weighted protocol, need to make copies of every item
-        if isWeighted:
-            self.cutsets = []
-            for cutset in cutsets:
-                self.cutsets.extend([cutset.items] * cutset.weight)
-        else:
-            self.cutsets = [cutset.items for cutset in cutsets]
+        # if isWeighted:
+        #     self.cutsets = []
+        #     for cutset in cutsets:
+        #         self.cutsets.extend([cutset.items] * cutset.weight)
+        # else:
+        self._cutsets = cutsets
+        # self._cutsets = [cutset.items for cutset in cutsets]
+        # self.length = len(self._cutsets)
 
-        self.length = len(self.cutsets)
+    @property
+    def cutsets(self):
+        for cutset in self._cutsets:
+            for index in xrange(cutset.weight):    # for each item
+                yield "{}{}".format(cutset.items, index)
 
 # Parsing
 # =================
@@ -91,3 +101,28 @@ def string_to_cutsets(string, isWeighted=False):
     """
     return CutsetList(lxml_to_cutsets(string_to_lxml(string)), isWeighted)
     # return CutsetList(list(lxml_to_cutsets(string_to_lxml(string))))
+
+# Encryption
+
+def hash_message(message, hashType='MURMUR'):
+    '''
+        Convert string to a 128 bit signed digest.
+        Hash is not cryptographic, which is OK since the encryption happens
+        at a different level of abstraction.
+    '''
+
+    if hashType == 'MURMUR':
+        # mmh3.hash128('foo') # 128 bit signed int
+        # hashed = murmur.hash_bytes(message)
+        hashed = murmur.hash128(message)
+    else: # throw an error
+        assert(0)
+    # Not implemented yet until it's decided whether it's appropriate to 
+    # hash the bits.
+    # the https://en.wikipedia.org/wiki/Secure_Hash_Algorithms
+    # elif hashType == "SHA":   # produces 160 bit int? Considered insecure
+    #     hashed = SHA.new(message)
+    # elif hashType == "MD5":   # produces 128 bits marked as insecure possibly?
+    #     hashed = MD5.new(message)
+
+    return hashed
