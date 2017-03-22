@@ -1,0 +1,4 @@
+<cutsets> <cutset items='DNS1' weight='10'/>
+<cutset items='Agg1, Agg2' weight='6'/> 
+
+</cutsets>

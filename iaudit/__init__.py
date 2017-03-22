@@ -15,6 +15,7 @@ from lxml import objectify
 
 # Handle multi-node deployment issues
 import network
+import keygen
 
 # encryption
 from Crypto.Hash import SHA, MD5 
@@ -104,7 +105,7 @@ def string_to_cutsets(string, isWeighted=False):
 
 # Encryption
 
-def hash_message(message, hashType='MURMUR'):
+def hash_message(message, seed, hashType='MURMUR'):
     '''
         Convert string to a 128 bit signed digest.
         Hash is not cryptographic, which is OK since the encryption happens
@@ -114,7 +115,7 @@ def hash_message(message, hashType='MURMUR'):
     if hashType == 'MURMUR':
         # mmh3.hash128('foo') # 128 bit signed int
         # hashed = murmur.hash_bytes(message)
-        hashed = murmur.hash128(message)
+        hashed = murmur.hash128(message, seed)
     else: # throw an error
         assert(0)
     # Not implemented yet until it's decided whether it's appropriate to 
