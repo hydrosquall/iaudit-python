@@ -86,3 +86,9 @@ Lastly, use `trigger.py` to compute the intersection cardinalities.
 ```
     python trigger.py
 ```
+
+You can test all this in one script with
+
+```
+    ./demo.sh
+```

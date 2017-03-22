@@ -39,12 +39,11 @@ def exception_handler(request, exception):
 for i in xrange(numWorkers):
     # Set of asynchronous requests
     for operation in ['process', 'pass']:
-        print "i {} | {}".format(i, operation)
+        # print "i {} | {}".format(i, operation)
         rs = (grequests.get("http://{}/{}".format(u, operation)) for u in config['workers'])
         # wait for each thing to finish
         grequests.map(rs, exception_handler=exception_handler)
-
-    print "Complete round {}".format(i)
+    # print "Complete round {}".format(i)
 
 # now, check the intersections
 cutsets = []
@@ -55,17 +54,24 @@ for i in xrange(numWorkers):
 # convert each grouping to a set
 sets = [set(cutset) for cutset in cutsets]
 
-
+# all possible pairings of workers so intersection operator is usable later
+# 2-way pairing is currently arbitrary
 providerPairs = list(itertools.combinations(range(numWorkers), 2))
 
+scores = []
 for pair in providerPairs:
-    print pair
-    intersection = sets[pair[0]] & sets[pair[1]]
-    print len(intersection)
+    lenIntersection = len(sets[pair[0]] & sets[pair[1]])
+    lenTotal = len(sets[pair[0]])+  len(sets[pair[1]])
+    print "{}: {}/{}".format(pair, lenIntersection, lenTotal)
+    scores.append((pair, float(lenIntersection) / lenTotal))
+
+scores.sort(key=lambda x: x[1]) # sort by second value
+
+# use slicing here to control which of the top scores you return to user!
+print scores
 
 # shutdown each server
 rs = (grequests.post("http://{}/shutdown".format(server)) for server in allServers)
-# wait for each thing to finish
+# Run asynchronous requests
 grequests.map(rs, exception_handler=exception_handler)
-print "All done!"
-
+# print "All done!"
