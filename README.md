@@ -31,3 +31,58 @@ Part of a senior project at Yale University.
 - Project Lead: [Ennan Zhai, PhD](http://www.cs.yale.edu/homes/zhai-ennan/)
 - Advisor: [Profesor Avi Silberschatz](http://codex.cs.yale.edu/avi/)
 - Students: William Dower, [Cameron Yick](www.cameronyick.us)
+
+### Usage
+
+Setup:
+
+```
+    pip install -r requirements.txt
+```
+
+Then, configure `iaudit-master.json` with your workers and desired strength of encryption.
+
+```python
+# Example configuration
+{
+    "masterHost": "localhost:4999",  # an unused port for master
+    "keyBits": 256,                  # number of bits for encryption. minimum 256
+    "modBits": 1024,                 # number of bits on p,q. minimum 512, must be even
+    "workers" : [                    # unused port for workers
+        "127.0.0.1:5001",
+        "127.0.0.1:5002",
+        "127.0.0.1:5003"
+    ],
+    "hashSeed": 14                  # random integer for seeding murmurhash.
+}
+```
+
+There are 2 data directories provided here as examples.
+
+- `master` directory simulates the log files of the master node
+- `workers` directory simulates the log files of each of the `n` workers
+
+Each worker directory, named with the worker node's ID number (from 0 to `n`),
+should contain an vulnerabilities file called `vulnerabilities.txt`
+
+To run the single-computer demo:
+
+For each worker, spawn a worker server, using the 1st arg to specify worker id.
+
+```
+    python worker.py 0
+    python worker.py 1
+    python worker.py 2
+```
+
+Then, spawn the master
+
+```
+    python master.py
+```
+
+Lastly, use `trigger.py` to compute the intersection cardinalities.
+
+```
+    python trigger.py
+```
