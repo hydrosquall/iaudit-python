@@ -1,7 +1,6 @@
 # Cameron Yick
 # 1 worker per cloud provider
 # After computing a local encryption key
-
 import os
 import sys
 import json
@@ -13,6 +12,9 @@ from flask import Flask
 from flask import request
 import requests
 
+import numpy as np
+import math
+
 if len(sys.argv) > 1:
     confPath = os.path.join("workers", sys.argv[1], 'public-config.json')
     graphPath = os.path.join("workers", sys.argv[1], 'vulnerabilities.txt')
@@ -22,20 +24,56 @@ if len(sys.argv) > 1:
     with open(graphPath) as f:
         cutsetText="".join(line.rstrip() for line in f)
 
-    cutsets = {
-        'workerID' : config['workerID'],
-        'cutsets' : list(iaudit.string_to_cutsets(cutsetText).cutsets)
-    }
-
     numWorkers = config['numWorkers']
     seed = config['hashSeed']
+    isMinHash = config['isMinHash']  # Are we using minHash method
 
-    # use hash function to encrypt each dependency with murmurhash
-    # then each message will be a long int
-    cutsets['cutsets'] = [iaudit.hash_message(message, seed) for message in cutsets['cutsets']]
+    # Init config file
+    cutsets = {
+        'workerID' : config['workerID'],
+    }
+
+    cutsetList = iaudit.string_to_cutsets(cutsetText)
+
+    if isMinHash == 1:
+        cutsets['cutsets'] = list(cutsetList.cutsetsItems)
+    else:
+        cutsets['cutsets'] = list(cutsetList.cutsets)
+
+    # Convert the cutset text to 128-bit sequences
+    murmurHashes = [iaudit.hash_message(message, seed) 
+                    for message in cutsets['cutsets']]
+
+    transportHashes = []  # hashes to actually send around
+
+    if isMinHash == 1:
+        minHashParams = config['minHashes']
+        c             = config['minHashPrime']
+        cFloat        = float(c)
+        messageWeights = [float(weight) for weight 
+                          in cutsetList.cutsetsWeights]
+
+        for a,b in minHashParams: # for each minhash function
+
+            candidates = []
+            # Vectorize for performance later with numpy
+            for message, weight in zip(murmurHashes, messageWeights):
+                normalizedX = iaudit.minhash(message, a, b, c) / cFloat
+                testValue = -(math.log(normalizedX) / weight)
+                candidates.append(testValue)         
+
+            # then, use the murmurhash of the minimum candidate.
+            transportHashes.append(murmurHashes[np.argmin(candidates)])
+    else:
+        # use hash function to encrypt each dependency with murmurhash
+        # then each message will be a long int
+        transportHashes = murmurHashes
+
+
+    cutsets['cutsets'] = transportHashes
 
     # store cutset to disk
-    keygen.setConfig( cutsets, cutsetPath)
+    keygen.setConfig(cutsets, cutsetPath)
 
     # lastly, make local worker key
     pvtConfig = keygen.generate_private_config(config, config['keyBits'], config['workerID'])

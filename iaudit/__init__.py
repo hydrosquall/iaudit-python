@@ -67,7 +67,7 @@ class CutsetList():
         #     for cutset in cutsets:
         #         self.cutsets.extend([cutset.items] * cutset.weight)
         # else:
-        self._cutsets = cutsets
+        self._cutsets = list(cutsets)
         # self._cutsets = [cutset.items for cutset in cutsets]
         # self.length = len(self._cutsets)
 
@@ -76,6 +76,19 @@ class CutsetList():
         for cutset in self._cutsets:
             for index in xrange(cutset.weight):    # for each item
                 yield "{}{}".format(cutset.items, index)
+
+
+    # Form of cutsets without weighing
+    @property
+    def cutsetsItems(self):
+        for cutset in self._cutsets:
+            yield cutset.items
+
+
+    @property
+    def cutsetsWeights(self):
+        for cutset in self._cutsets:
+            yield cutset.weight
 
 # Parsing
 # =================
@@ -105,6 +118,7 @@ def string_to_cutsets(string, isWeighted=False):
 
 # Encryption
 
+
 def hash_message(message, seed, hashType='MURMUR'):
     '''
         Convert string to a 128 bit signed digest.
@@ -127,3 +141,20 @@ def hash_message(message, seed, hashType='MURMUR'):
     #     hashed = MD5.new(message)
 
     return hashed
+
+
+# Initial Minhash
+def minhash(message, a, b, c):
+    # http://mccormickml.com/2015/06/12/minhash-tutorial-with-python-code/
+    """
+    The coefficients a and b are randomly chosen integers less than the
+    maximum value of x. c is a prime number slightly bigger than the
+    maximum value of x.
+
+    minhash(x) = (ax + b) % c
+
+    # Because we are using 128 bit murmurhash, I am going to hardcode this:
+    958619577 8359471439 3831931415 1899378973 
+    """
+
+    return (a * message + b) % c

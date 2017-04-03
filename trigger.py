@@ -1,13 +1,10 @@
 # This script makes each of the servers talk to each other.
-# 
+
 import os
 from iaudit import keygen
 import itertools
-
 import grequests
-
-import os
-from iaudit import keygen
+import random
 
 config = keygen.getConfig("iaudit-master.json")
 pubConfig = keygen.generate_public_config(config['modBits'], config['keyBits'])
@@ -15,9 +12,21 @@ numWorkers = len(config['workers'])
 pubConfig['masterHost'] = config['masterHost']  # IP:Port of master
 pubConfig['numWorkers'] = numWorkers
 pubConfig['hashSeed'] = config['hashSeed']
+pubConfig['minHashPrime'] = config['minHashPrime']
+pubConfig['isMinHash'] = config['isMinHash']
 
-# Generate public config files and distribute to each worker
-# Maybe these should be part of trigger, and not the server code.
+# Now we need to generate numMinHashes of minHash pairs
+minHashes = set()
+
+while len(minHashes) < config['numMinHashes']:
+    # 127 bits guarantees a and b will be small enough
+    minHashes.add( (random.getrandbits(128) - 1 , random.getrandbits(128) -1 ))
+
+pubConfig['minHashes'] = list(minHashes)
+
+
+# # Generate public config files and distribute to each worker
+# # Maybe these should be part of trigger, and not the server code.
 cwd = os.getcwd()
 for i, worker in enumerate(config['workers']):
     filepath = os.path.join(cwd, "workers", str(i), "public-config.json")
@@ -58,10 +67,16 @@ sets = [set(cutset) for cutset in cutsets]
 # 2-way pairing is currently arbitrary
 providerPairs = list(itertools.combinations(range(numWorkers), 2))
 
+print("Computing {} Intersections".format(len(providerPairs)))
 scores = []
 for pair in providerPairs:
     lenIntersection = len(sets[pair[0]] & sets[pair[1]])
-    lenTotal = len(sets[pair[0]])+  len(sets[pair[1]])
+
+    if config['isMinHash'] == 1:
+        lenTotal = config['numMinHashes']
+    else:
+        lenTotal = len(sets[pair[0]]) +  len(sets[pair[1]])
+
     print "{}: {}/{}".format(pair, lenIntersection, lenTotal)
     scores.append((pair, float(lenIntersection) / lenTotal))
 
@@ -74,4 +89,4 @@ print scores
 rs = (grequests.post("http://{}/shutdown".format(server)) for server in allServers)
 # Run asynchronous requests
 grequests.map(rs, exception_handler=exception_handler)
-# print "All done!"
+print "All done!"

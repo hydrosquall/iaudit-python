@@ -13,7 +13,7 @@ echo "Launching Servers"
 (python master.py)&
 
 echo "Waiting for servers to initialize"
-sleep 5 
+sleep 6 
 
 echo "Compute cardinality scores"
 python trigger.py > master/intersection.txt
