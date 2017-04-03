@@ -47,9 +47,9 @@ if len(sys.argv) > 1:
     transportHashes = []  # hashes to actually send around
 
     if isMinHash == 1:
-        minHashParams = config['minHashes']
-        c             = config['minHashPrime']
-        cFloat        = float(c)
+        minHashParams  = config['minHashes']
+        c              = config['minHashPrime']
+        cFloat         = float(c)
         messageWeights = [float(weight) for weight 
                           in cutsetList.cutsetsWeights]
 
@@ -64,6 +64,7 @@ if len(sys.argv) > 1:
 
             # then, use the murmurhash of the minimum candidate.
             transportHashes.append(murmurHashes[np.argmin(candidates)])
+            
     else:
         # use hash function to encrypt each dependency with murmurhash
         # then each message will be a long int

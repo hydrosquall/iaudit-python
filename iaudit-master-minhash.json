@@ -8,7 +8,7 @@
         "127.0.0.1:5003"
     ],
     "hashSeed": 14,
-    "isMinHash": 0, 
-    "numMinHashes": 1500,
+    "isMinHash": 1, 
+    "numMinHashes": 30,
     "minHashPrime": 958619577835947143938319314151899378973
 }

@@ -5,8 +5,13 @@ from iaudit import keygen
 import itertools
 import grequests
 import random
+import sys
 
-config = keygen.getConfig("iaudit-master.json")
+if len(sys.argv) > 1:
+    config = keygen.getConfig(str(sys.argv[1]) )
+else:
+    config = keygen.getConfig("iaudit-master.json")
+
 pubConfig = keygen.generate_public_config(config['modBits'], config['keyBits'])
 numWorkers = len(config['workers'])
 pubConfig['masterHost'] = config['masterHost']  # IP:Port of master
@@ -24,9 +29,8 @@ while len(minHashes) < config['numMinHashes']:
 
 pubConfig['minHashes'] = list(minHashes)
 
-
-# # Generate public config files and distribute to each worker
-# # Maybe these should be part of trigger, and not the server code.
+# Generate public config files and distribute to each worker
+# Maybe these should be part of trigger, and not the server code.
 cwd = os.getcwd()
 for i, worker in enumerate(config['workers']):
     filepath = os.path.join(cwd, "workers", str(i), "public-config.json")
@@ -67,7 +71,13 @@ sets = [set(cutset) for cutset in cutsets]
 # 2-way pairing is currently arbitrary
 providerPairs = list(itertools.combinations(range(numWorkers), 2))
 
-print("Computing {} Intersections".format(len(providerPairs)))
+print("Computing {} Intersections".format(len(providerPairs))),
+if config['isMinHash'] == 1:
+    print("WITH minHash")
+else:
+    print("WITHOUT minHash")
+
+
 scores = []
 for pair in providerPairs:
     lenIntersection = len(sets[pair[0]] & sets[pair[1]])
@@ -83,10 +93,14 @@ for pair in providerPairs:
 scores.sort(key=lambda x: x[1]) # sort by second value
 
 # use slicing here to control which of the top scores you return to user!
-print scores
+# Print rankings
+print "Rankings: "
+for i, score in enumerate(scores):
+
+    print "{}: {}   {}".format(i, score[0], score[1])
 
 # shutdown each server
 rs = (grequests.post("http://{}/shutdown".format(server)) for server in allServers)
 # Run asynchronous requests
 grequests.map(rs, exception_handler=exception_handler)
-print "All done!"
+# print "All done!"
