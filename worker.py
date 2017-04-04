@@ -36,42 +36,44 @@ if len(sys.argv) > 1:
     cutsetList = iaudit.string_to_cutsets(cutsetText)
 
     if isMinHash == 1:
+        # print "In Cutset"
         cutsets['cutsets'] = list(cutsetList.cutsetsItems)
-    else:
+    else:   # not minhash - want to have lots of things
         cutsets['cutsets'] = list(cutsetList.cutsets)
 
     # Convert the cutset text to 128-bit sequences
-    murmurHashes = [iaudit.hash_message(message, seed) 
-                    for message in cutsets['cutsets']]
+    murmurHashes = np.array([iaudit.hash_message(message, seed) 
+                    for message in cutsets['cutsets']])
 
     transportHashes = []  # hashes to actually send around
 
     if isMinHash == 1:
         minHashParams  = config['minHashes']
         c              = config['minHashPrime']
-        cFloat         = float(c)
-        messageWeights = [float(weight) for weight 
-                          in cutsetList.cutsetsWeights]
+        cFloatInverse  = 1.0 / c
+        messageWeights = np.array([float(weight) for weight 
+                          in cutsetList.cutsetsWeights])
 
         for a,b in minHashParams: # for each minhash function
-
             candidates = []
+
+
             # Vectorize for performance later with numpy
-            for message, weight in zip(murmurHashes, messageWeights):
-                normalizedX = iaudit.minhash(message, a, b, c) / cFloat
-                testValue = -(math.log(normalizedX) / weight)
-                candidates.append(testValue)         
+            # for message, weight in zip(murmurHashes, messageWeights):
+            #     normalizedX = iaudit.minhash(message, a, b, c) * cFloatInverse
+            #     testValue = -(math.log(normalizedX) / weight)
+            #     candidates.append(testValue)         
 
             # then, use the murmurhash of the minimum candidate.
-            transportHashes.append(murmurHashes[np.argmin(candidates)])
-            
+            transportHashes.append(murmurHashes[np.argmin(candidates)])  
     else:
         # use hash function to encrypt each dependency with murmurhash
         # then each message will be a long int
+        # print "Not Min Hash"
         transportHashes = murmurHashes
 
-
     cutsets['cutsets'] = transportHashes
+    print("Worker {}: {}".format(config['workerID'], len(transportHashes)))
 
     # store cutset to disk
     keygen.setConfig(cutsets, cutsetPath)
@@ -86,12 +88,7 @@ else:
 
 
 HEADERS = {'Content-Type': 'application/json'}
-
 app = Flask(__name__)
-
-newCutsets = {}
-payload = {}
-
 
 # Shutdown method provided via pococo
 def shutdown_server():
@@ -110,7 +107,7 @@ def storeCutsets():
     '''
         Store a cutset to disk to be processed on next cycle
     '''
-    print "try to store"
+    # print "try to store"
     newCutsets = request.get_json(force=True)
     # save cutset to disk
     keygen.setConfig( newCutsets, cutsetPath)
@@ -124,7 +121,6 @@ def processCutsets():
     '''
 
     cutsets = keygen.getConfig(cutsetPath)
-        
     # Shuffle and encrypt
     # encrypt in place
     cutsets['cutsets'] = [pubKey.encrypt(message, None)[0] for message in cutsets['cutsets']]
@@ -139,20 +135,22 @@ def processCutsets():
     # print payload
     # Either relay data to next neighbor, or give to master
     # now that we're done, be OK with reading the new data on the next cycle.
-    
+
     return "OK"
 
 # break pass and swap so that operations are atomic
+# make more secure by requiring authorization key to access route.
 @app.route("/pass", methods=['GET'])
 def passCutsets():
     payload = keygen.getConfig(cutsetPath)
     passCutsets.counter += 1
     # print "{} pinged {} times".format(config['workerID'], passCutsets.counter)
     if passCutsets.counter < numWorkers:
-        print "trying to store at {}".format(config['neighborHost'])
-        requests.post("http://{}/store".format(config['neighborHost']), headers=HEADERS, json=payload)
+        # print "trying to store at {}".format(config['neighborHost'])
+        requests.post("http://{}/store".format(config['neighborHost']), 
+                      headers=HEADERS, json=payload)
     else:
-        print "On last call, just give to master"
+        # print "On last call, just give to master"
         requests.post("http://{}/save".format(config['masterHost']), headers=HEADERS, json=payload)
     return "OK"
 

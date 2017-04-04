@@ -1,52 +1,25 @@
-# This script makes each of the servers talk to each other.
+# This script runs on the master node, and is responsible for coordinating
+# all of the other nodes.
 
 import os
 from iaudit import keygen
 import itertools
 import grequests
-import random
 import sys
 
+def exception_handler(request, exception):
+    print "Request failed"
+
 if len(sys.argv) > 1:
+    print "Reading custom input {}".format(str(sys.argv[1]))
     config = keygen.getConfig(str(sys.argv[1]) )
 else:
     config = keygen.getConfig("iaudit-master.json")
 
-pubConfig = keygen.generate_public_config(config['modBits'], config['keyBits'])
 numWorkers = len(config['workers'])
-pubConfig['masterHost'] = config['masterHost']  # IP:Port of master
-pubConfig['numWorkers'] = numWorkers
-pubConfig['hashSeed'] = config['hashSeed']
-pubConfig['minHashPrime'] = config['minHashPrime']
-pubConfig['isMinHash'] = config['isMinHash']
-
-# Now we need to generate numMinHashes of minHash pairs
-minHashes = set()
-
-while len(minHashes) < config['numMinHashes']:
-    # 127 bits guarantees a and b will be small enough
-    minHashes.add( (random.getrandbits(128) - 1 , random.getrandbits(128) -1 ))
-
-pubConfig['minHashes'] = list(minHashes)
-
-# Generate public config files and distribute to each worker
-# Maybe these should be part of trigger, and not the server code.
-cwd = os.getcwd()
-for i, worker in enumerate(config['workers']):
-    filepath = os.path.join(cwd, "workers", str(i), "public-config.json")
-    workerConfig = dict(pubConfig)
-    workerConfig['workerID'] = i
-    workerConfig['workerHost'] = worker    # IP:Port of worker
-    indexNeighbor = (i + 1) % numWorkers   # who to pass data to
-    workerConfig['neighborHost'] = config['workers'][indexNeighbor]
-    keygen.setConfig(workerConfig, filepath)
-
 
 allServers = list(config['workers'])
 allServers.append(config['masterHost'])
-
-def exception_handler(request, exception):
-    print "Request failed"
 
 # Have each worker process its local batch, and send to neighbor.
 for i in xrange(numWorkers):
@@ -59,6 +32,7 @@ for i in xrange(numWorkers):
     # print "Complete round {}".format(i)
 
 # now, check the intersections
+cwd = os.getcwd()
 cutsets = []
 for i in xrange(numWorkers):
     logPath = os.path.join(cwd, "master", str(i))
@@ -68,35 +42,34 @@ for i in xrange(numWorkers):
 sets = [set(cutset) for cutset in cutsets]
 
 # all possible pairings of workers so intersection operator is usable later
-# 2-way pairing is currently arbitrary
+# 2-way pairing is currently arbitrary, could become 3 way if needed
 providerPairs = list(itertools.combinations(range(numWorkers), 2))
 
 print("Computing {} Intersections".format(len(providerPairs))),
 if config['isMinHash'] == 1:
     print("WITH minHash")
+    print("(Pair) : # overlapping / # of minhash functions")
 else:
     print("WITHOUT minHash")
-
+    print("(Pair) : # overlapping / length of set union")
 
 scores = []
 for pair in providerPairs:
-    lenIntersection = len(sets[pair[0]] & sets[pair[1]])
+    lenIntersection = float(len(sets[pair[0]] & sets[pair[1]]))
 
     if config['isMinHash'] == 1:
         lenTotal = config['numMinHashes']
     else:
-        lenTotal = len(sets[pair[0]]) +  len(sets[pair[1]])
+        lenTotal = len(sets[pair[0]]) + len(sets[pair[1]])
 
     print "{}: {}/{}".format(pair, lenIntersection, lenTotal)
-    scores.append((pair, float(lenIntersection) / lenTotal))
+    scores.append((pair, lenIntersection / lenTotal))
 
 scores.sort(key=lambda x: x[1]) # sort by second value
-
 # use slicing here to control which of the top scores you return to user!
 # Print rankings
 print "Rankings: "
 for i, score in enumerate(scores):
-
     print "{}: {}   {}".format(i, score[0], score[1])
 
 # shutdown each server

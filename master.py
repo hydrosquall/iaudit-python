@@ -6,7 +6,6 @@
 from flask import Flask
 from flask_script import Manager, Server
 from flask import request
-import requests
 
 from iaudit import keygen
 import os
@@ -37,13 +36,14 @@ def intersectCutsets():
     '''
     response = request.get_json(force=True)
     workerID = response['workerID']
-    print "Heard from {}".format(workerID)
+    # print "Heard from {}".format(workerID)
     filepath = os.path.join(cwd, 'master', str(workerID))
     if response:
         keygen.setConfig(response['cutsets'], filepath)
-        print "Store Success"
+        # print "Store Success"
     else:
-        print "Store Failed"
+        pass
+        # print "Store Failed"
 
     return "OK"
 

@@ -1,0 +1,27 @@
+Reading custom input iaudit-master-minhash.json
+Computing 3 Intersections WITH minHash
+(Pair) : # overlapping / # of minhash functions
+(0, 1): 1.0/200
+(0, 2): 2.0/200
+(1, 2): 2.0/200
+Rankings: 
+0: (0, 1)   0.005
+1: (0, 2)   0.01
+2: (1, 2)   0.01
+Node 0
+<cutsets> 
+    <cutset items='DNS1' weight='10'/> 
+    <cutset items='Agg1, Agg2' weight='6'/> 
+    <cutset items='DNS12' weight='8'/> 
+    <cutset items='Agg5' weight='2'/>
+</cutsets>Node 1
+<cutsets> 
+    <cutset items='DNS1' weight='10'/> 
+    <cutset items='DNS2' weight='4'/> 
+    <cutset items='Agg3' weight='6'/>
+</cutsets>Node 2
+<cutsets> 
+    <cutset items='DNS1' weight='10'/> 
+    <cutset items='Agg3' weight='6'/>
+    <cutset items='Agg5' weight='2'/>
+</cutsets>

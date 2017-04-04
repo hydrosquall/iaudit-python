@@ -9,6 +9,6 @@
     ],
     "hashSeed": 14,
     "isMinHash": 0, 
-    "numMinHashes": 1500,
+    "numMinHashes": 10,
     "minHashPrime": 958619577835947143938319314151899378973
 }

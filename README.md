@@ -54,6 +54,9 @@ Then, configure `iaudit-master.json` with your workers and desired strength of e
         "127.0.0.1:5003"
     ],
     "hashSeed": 14                  # random integer for seeding murmurhash.
+    "isMinHash": 0,                 # 1 for using minHash method, 0 otherwise
+    "numMinHashes": 10,             # number of minhash functions to use
+    "minHashPrime": 958619577835947143938319314151899378973 # a hardcoded prime bigger than 2^128
 }
 ```
 

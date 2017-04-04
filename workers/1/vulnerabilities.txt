@@ -1,5 +1,5 @@
 <cutsets> 
     <cutset items='DNS1' weight='10'/> 
-    <cutset items='Agg3' weight='6'/>
     <cutset items='DNS2' weight='4'/> 
+    <cutset items='Agg3' weight='6'/>
 </cutsets>
