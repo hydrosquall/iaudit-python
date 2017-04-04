@@ -3,7 +3,6 @@
 # After computing a local encryption key
 import os
 import sys
-import json
 from iaudit import keygen
 import iaudit
 import random
@@ -11,9 +10,8 @@ import random
 from flask import Flask
 from flask import request
 import requests
-
 import numpy as np
-import math
+
 
 if len(sys.argv) > 1:
     confPath = os.path.join("workers", sys.argv[1], 'public-config.json')
@@ -41,24 +39,33 @@ if len(sys.argv) > 1:
     else:   # not minhash - want to have lots of things
         cutsets['cutsets'] = list(cutsetList.cutsets)
 
+    numCutsets = len(cutsets['cutsets'])
+
     # Convert the cutset text to 128-bit sequences
-    murmurHashes = np.array([iaudit.hash_message(message, seed) 
-                    for message in cutsets['cutsets']])
+    murmurHashes = [iaudit.hash_message(message, seed) \
+                    for message in cutsets['cutsets']]
+
 
     transportHashes = []  # hashes to actually send around
 
     if isMinHash == 1:
         minHashParams  = config['minHashes']
         c              = config['minHashPrime']
-        cFloatInverse  = 1.0 / c
-        messageWeights = np.array([float(weight) for weight 
-                          in cutsetList.cutsetsWeights])
+        cFloatInverse  = 1.0 / c  # normalize x so it lies between 0 and 1
+        messageWeights = np.fromiter((float(weight) for weight 
+                          in cutsetList.cutsetsWeights), int, count=numCutsets)
 
         for a,b in minHashParams: # for each minhash function
-            candidates = []
-
+            # observe that numpy does not support ops on longs because they are objects
+            # workaround is to use numpy floats instead
+            candidates = np.array([iaudit.minhash(message, a, b, c) \
+                                  for message in murmurHashes], dtype=np.float64)
+            candidates *= cFloatInverse
+            candidates = -np.log(candidates)
+            candidates /= messageWeights
 
             # Vectorize for performance later with numpy
+            # candidates = []
             # for message, weight in zip(murmurHashes, messageWeights):
             #     normalizedX = iaudit.minhash(message, a, b, c) * cFloatInverse
             #     testValue = -(math.log(normalizedX) / weight)
@@ -73,11 +80,10 @@ if len(sys.argv) > 1:
         transportHashes = murmurHashes
 
     cutsets['cutsets'] = transportHashes
-    print("Worker {}: {}".format(config['workerID'], len(transportHashes)))
+    # print("Worker {}: {}".format(config['workerID'], len(transportHashes)))
 
     # store cutset to disk
     keygen.setConfig(cutsets, cutsetPath)
-
     # lastly, make local worker key
     pvtConfig = keygen.generate_private_config(config, config['keyBits'], config['workerID'])
     pvtKey = keygen.make_private_key(config, pvtConfig)

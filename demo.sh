@@ -16,7 +16,7 @@ python setup.py iaudit-master-minhash.json
 (python master.py)&
 
 echo "Waiting for servers to initialize"
-sleep 6 
+sleep 5
 
 echo "Compute cardinality scores"
 time python trigger.py iaudit-master-minhash.json > $OUTFILE1
@@ -42,7 +42,7 @@ python setup.py iaudit-master.json
 (python master.py)&
 
 echo "Waiting for servers to initialize"
-sleep 6 
+sleep 5
 
 echo "Compute cardinality scores"
 time python trigger.py iaudit-master.json > $OUTFILE2

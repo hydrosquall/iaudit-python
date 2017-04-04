@@ -17,7 +17,6 @@ else:
     config = keygen.getConfig("iaudit-master.json")
 
 numWorkers = len(config['workers'])
-
 allServers = list(config['workers'])
 allServers.append(config['masterHost'])
 
@@ -39,6 +38,9 @@ for i in xrange(numWorkers):
     cutsets.append(keygen.getConfig(logPath))
 
 # convert each grouping to a set
+# for cutset in cutsets:
+#     print len(cutset)
+#     print len(set(cutset))
 sets = [set(cutset) for cutset in cutsets]
 
 # all possible pairings of workers so intersection operator is usable later
