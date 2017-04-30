@@ -18,7 +18,7 @@ python setup.py iaudit-master-minhash.json
 echo "Waiting for servers to initialize"
 sleep 5
 
-echo "Compute cardinality scores"
+echo "Compute cardinality scores with 30 minhashes"
 time python trigger.py iaudit-master-minhash.json > $OUTFILE1
 
 # Debugging
@@ -32,7 +32,7 @@ cat workers/2/vulnerabilities.txt >> $OUTFILE1
 sleep 2
 
 # run a second time
-echo "Launching Servers Second Time"
+echo "Launching Servers Second Time Without Minhash"
 OUTFILE2=results/$DATE-nomin.txt
 
 python setup.py iaudit-master.json
