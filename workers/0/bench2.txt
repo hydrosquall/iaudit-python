@@ -1,0 +1,102 @@
+<cutsets>
+   <cutset items="v8, v9, v40, v58, v63" weight="42" />
+   <cutset items="v2, v6, v8, v58, v63" weight="41" />
+   <cutset items="v8, v40, v58, v63, v69" weight="41" />
+   <cutset items="v9, v40, v52, v58, v63" weight="41" />
+   <cutset items="v6, v8, v46, v58, v63" weight="40" />
+   <cutset items="v6, v8, v40, v58, v63" weight="39" />
+   <cutset items="v8, v39, v40, v58, v63" weight="39" />
+   <cutset items="v8, v40, v58, v63, v85" weight="39" />
+   <cutset items="v8, v20, v40, v58, v63" weight="39" />
+   <cutset items="v9, v14, v40, v58, v63" weight="39" />
+   <cutset items="v20, v40, v52, v58, v63" weight="38" />
+   <cutset items="v2, v8, v9, v38, v58, v63" weight="53" />
+   <cutset items="v8, v40, v58, v63, v88" weight="38" />
+   <cutset items="v8, v9, v40, v48, v63" weight="39" />
+   <cutset items="v2, v8, v38, v58, v63, v69" weight="52" />
+   <cutset items="v2, v9, v38, v52, v58, v63" weight="52" />
+   <cutset items="v2, v6, v8, v48, v63" weight="38" />
+   <cutset items="v8, v9, v38, v46, v58, v63" weight="52" />
+   <cutset items="v8, v40, v48, v63, v69" weight="38" />
+   <cutset items="v9, v40, v48, v52, v63" weight="38" />
+   <cutset items="v9, v40, v63, v75, v92" weight="38" />
+   <cutset items="v7, v8, v40, v58, v63" weight="37" />
+   <cutset items="v8, v38, v46, v58, v63, v69" weight="51" />
+   <cutset items="v9, v38, v46, v52, v58, v63" weight="51" />
+   <cutset items="v2, v8, v9, v58, v63, v70" weight="51" />
+   <cutset items="v6, v8, v46, v48, v63" weight="37" />
+   <cutset items="v14, v20, v40, v58, v63" weight="36" />
+   <cutset items="v8, v9, v40, v63, v73, v75" weight="51" />
+   <cutset items="v9, v40, v58, v63, v92" weight="37" />
+   <cutset items="v2, v6, v8, v63, v73, v75" weight="50" />
+   <cutset items="v8, v9, v40, v63, v67" weight="38" />
+   <cutset items="v2, v8, v38, v39, v58, v63" weight="50" />
+   <cutset items="v2, v8, v58, v63, v69, v70" weight="50" />
+   <cutset items="v2, v8, v38, v58, v63, v85" weight="50" />
+   <cutset items="v2, v8, v20, v38, v58, v63" weight="50" />
+   <cutset items="v2, v6, v9, v52, v58, v63" weight="50" />
+   <cutset items="v2, v9, v52, v58, v63, v70" weight="50" />
+   <cutset items="v8, v9, v46, v58, v63, v70" weight="50" />
+   <cutset items="v8, v40, v63, v69, v73, v75" weight="50" />
+   <cutset items="v9, v40, v52, v63, v73, v75" weight="50" />
+   <cutset items="v2, v6, v8, v63, v67" weight="37" />
+   <cutset items="v2, v9, v14, v38, v58, v63" weight="50" />
+   <cutset items="v8, v40, v48, v63, v85" weight="36" />
+   <cutset items="v8, v20, v40, v48, v63" weight="36" />
+   <cutset items="v8, v39, v40, v48, v63" weight="36" />
+   <cutset items="v6, v8, v40, v48, v63" weight="36" />
+   <cutset items="v2, v8, v9, v58, v63, v100" weight="50" />
+   <cutset items="v8, v40, v63, v67, v69" weight="37" />
+   <cutset items="v2, v6, v52, v63, v73, v75" weight="49" />
+   <cutset items="v9, v14, v40, v48, v63" weight="36" />
+   <cutset items="v9, v40, v52, v63, v67" weight="37" />
+   <cutset items="v9, v40, v60, v63, v75" weight="37" />
+   <cutset items="v2, v20, v38, v52, v58, v63" weight="49" />
+   <cutset items="v6, v8, v46, v63, v73, v75" weight="49" />
+   <cutset items="v8, v46, v58, v63, v69, v70" weight="49" />
+   <cutset items="v8, v38, v46, v58, v63, v85" weight="49" />
+   <cutset items="v8, v20, v38, v46, v58, v63" weight="49" />
+   <cutset items="v8, v38, v39, v46, v58, v63" weight="49" />
+   <cutset items="v40, v52, v63, v69, v73, v75" weight="49" />
+   <cutset items="v9, v46, v52, v58, v63, v70" weight="49" />
+   <cutset items="v6, v9, v46, v52, v58, v63" weight="49" />
+   <cutset items="v2, v8, v38, v58, v63, v88" weight="49" />
+   <cutset items="v2, v8, v58, v63, v69, v100" weight="49" />
+   <cutset items="v20, v40, v48, v52, v63" weight="35" />
+   <cutset items="v20, v40, v63, v75, v92" weight="35" />
+   <cutset items="v2, v9, v52, v58, v63, v100" weight="49" />
+   <cutset items="v9, v14, v38, v46, v58, v63" weight="49" />
+   <cutset items="v6, v8, v46, v63, v67" weight="36" />
+   <cutset items="v8, v9, v46, v58, v63, v100" weight="49" />
+   <cutset items="v2, v8, v9, v38, v48, v63" weight="50" />
+   <cutset items="v8, v40, v48, v63, v88" weight="35" />
+   <cutset items="v6, v46, v52, v63, v73, v75" weight="48" />
+   <cutset items="v2, v6, v52, v58, v63, v73" weight="48" />
+   <cutset items="v9, v40, v58, v60, v63" weight="36" />
+   <cutset items="v20, v38, v46, v52, v58, v63" weight="48" />
+   <cutset items="v2, v8, v39, v58, v63, v70" weight="48" />
+   <cutset items="v2, v8, v58, v63, v70, v85" weight="48" />
+   <cutset items="v2, v8, v20, v58, v63, v70" weight="48" />
+   <cutset items="v8, v40, v63, v73, v75, v85" weight="48" />
+   <cutset items="v8, v39, v40, v63, v73, v75" weight="48" />
+   <cutset items="v6, v8, v40, v63, v73, v75" weight="48" />
+   <cutset items="v8, v20, v40, v63, v73, v75" weight="48" />
+   <cutset items="v40, v52, v58, v63, v69, v73" weight="48" />
+   <cutset items="v8, v38, v46, v58, v63, v88" weight="48" />
+   <cutset items="v8, v46, v58, v63, v69, v100" weight="48" />
+   <cutset items="v20, v40, v58, v63, v92" weight="34" />
+   <cutset items="v9, v46, v52, v58, v63, v100" weight="48" />
+   <cutset items="v2, v9, v14, v58, v63, v70" weight="48" />
+   <cutset items="v2, v6, v9, v14, v58, v63" weight="48" />
+   <cutset items="v2, v8, v38, v48, v63, v69" weight="49" />
+   <cutset items="v2, v9, v38, v63, v75, v92" weight="49" />
+   <cutset items="v2, v9, v38, v48, v52, v63" weight="49" />
+   <cutset items="v8, v9, v38, v46, v48, v63" weight="49" />
+   <cutset items="v2, v7, v8, v38, v58, v63" weight="48" />
+   <cutset items="v9, v14, v40, v63, v73, v75" weight="48" />
+   <cutset items="v8, v39, v40, v63, v67" weight="35" />
+   <cutset items="v6, v8, v40, v63, v67" weight="35" />
+   <cutset items="v8, v20, v40, v63, v67" weight="35" />
+   <cutset items="v8, v40, v63, v67, v85" weight="35" />
+   <cutset items="v6, v46, v52, v58, v63, v73" weight="47" />
+</cutsets>

@@ -1,0 +1,12 @@
+<cutsets>
+   <cutset items="v12, v19, v46, v64, v82, v99" weight="53" />
+   <cutset items="v1, v12, v19, v46, v82, v99" weight="53" />
+   <cutset items="v12, v19, v64, v82, v94, v99" weight="52" />
+   <cutset items="v1, v12, v19, v82, v94, v99" weight="52" />
+   <cutset items="v12, v19, v46, v64, v80, v99" weight="52" />
+   <cutset items="v12, v19, v46, v64, v90, v99" weight="52" />
+   <cutset items="v1, v12, v19, v46, v90, v99" weight="52" />
+   <cutset items="v1, v12, v19, v46, v80, v99" weight="52" />
+   <cutset items="v12, v19, v28, v46, v82, v99" weight="51" />
+   <cutset items="v7, v12, v19, v64, v82, v99" weight="51" />
+</cutsets>

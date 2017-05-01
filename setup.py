@@ -21,6 +21,7 @@ pubConfig['numWorkers'] = numWorkers
 pubConfig['hashSeed'] = config['hashSeed']
 pubConfig['minHashPrime'] = config['minHashPrime']
 pubConfig['isMinHash'] = config['isMinHash']
+pubConfig['cutsetFilename'] = config['cutsetFilename']
 
 # Now we need to generate numMinHashes of minHash pairs
 if config['isMinHash'] == 1:

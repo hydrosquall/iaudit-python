@@ -1,6 +1,8 @@
+# worker.py
 # Cameron Yick
 # 1 worker per cloud provider
-# After computing a local encryption key
+# Run after computing a local encryption key
+
 import os
 import sys
 from iaudit import keygen
@@ -15,8 +17,9 @@ import numpy as np
 
 if len(sys.argv) > 1:
     confPath = os.path.join("workers", sys.argv[1], 'public-config.json')
-    graphPath = os.path.join("workers", sys.argv[1], 'vulnerabilities.txt')
     config = keygen.getConfig(confPath)
+    vulnerabilityPath = config['cutsetFilename']  # where cutsets stored
+    graphPath = os.path.join("workers", sys.argv[1], vulnerabilityPath)
     cutsetPath= os.path.join("workers", sys.argv[1], 'cutset.txt')
 
     with open(graphPath) as f:
@@ -64,19 +67,11 @@ if len(sys.argv) > 1:
             candidates = -np.log(candidates)
             candidates /= messageWeights
 
-            # Vectorize for performance later with numpy
-            # candidates = []
-            # for message, weight in zip(murmurHashes, messageWeights):
-            #     normalizedX = iaudit.minhash(message, a, b, c) * cFloatInverse
-            #     testValue = -(math.log(normalizedX) / weight)
-            #     candidates.append(testValue)         
-
             # then, use the murmurhash of the minimum candidate.
             transportHashes.append(murmurHashes[np.argmin(candidates)])  
     else:
         # use hash function to encrypt each dependency with murmurhash
         # then each message will be a long int
-        # print "Not Min Hash"
         transportHashes = murmurHashes
 
     cutsets['cutsets'] = transportHashes
@@ -95,6 +90,7 @@ else:
 
 HEADERS = {'Content-Type': 'application/json'}
 app = Flask(__name__)
+
 
 # Shutdown method provided via pococo
 def shutdown_server():

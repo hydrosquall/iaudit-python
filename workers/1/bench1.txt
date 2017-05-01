@@ -1,0 +1,12 @@
+<cutsets>
+   <cutset items="v6, v44, v47, v71, v81" weight="38" />
+   <cutset items="v6, v15, v44, v71, v81" weight="36" />
+   <cutset items="v15, v44, v52, v71, v81" weight="36" />
+   <cutset items="v6, v44, v46, v47, v71, v88" weight="50" />
+   <cutset items="v1, v6, v44, v47, v71, v88" weight="50" />
+   <cutset items="v6, v44, v71, v81, v86" weight="35" />
+   <cutset items="v44, v52, v71, v81, v86" weight="35" />
+   <cutset items="v6, v44, v72, v81" weight="23" />
+   <cutset items="v6, v15, v44, v46, v71, v88" weight="48" />
+   <cutset items="v15, v44, v46, v52, v71, v88" weight="48" />
+</cutsets>
