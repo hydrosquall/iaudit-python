@@ -7,12 +7,14 @@ import itertools
 import grequests
 import sys
 
+
 def exception_handler(request, exception):
     print "Request failed"
 
+
 if len(sys.argv) > 1:
     print "Reading custom input {}".format(str(sys.argv[1]))
-    config = keygen.getConfig(str(sys.argv[1]) )
+    config = keygen.getConfig(str(sys.argv[1]))
 else:
     config = keygen.getConfig("iaudit-master.json")
 
@@ -24,13 +26,14 @@ allServers.append(config['masterHost'])
 for i in xrange(numWorkers):
     # Set of asynchronous requests
     for operation in ['process', 'pass']:
-        # print "i {} | {}".format(i, operation)
-        rs = (grequests.get("http://{}/{}".format(u, operation)) for u in config['workers'])
-        # wait for each thing to finish
-        grequests.map(rs, exception_handler=exception_handler)
-    # print "Complete round {}".format(i)
 
-# now, check the intersections
+        rs = (grequests.get("http://{}/{}".format(u, operation))
+              for u in config['workers'])
+
+        # wait for each request to finish
+        grequests.map(rs, exception_handler=exception_handler)
+
+# Check the intersections
 cwd = os.getcwd()
 cutsets = []
 for i in xrange(numWorkers):
@@ -38,9 +41,6 @@ for i in xrange(numWorkers):
     cutsets.append(keygen.getConfig(logPath))
 
 # convert each grouping to a set
-# for cutset in cutsets:
-#     print len(cutset)
-#     print len(set(cutset))
 sets = [set(cutset) for cutset in cutsets]
 
 # all possible pairings of workers so intersection operator is usable later
@@ -67,7 +67,7 @@ for pair in providerPairs:
     print "{}: {}/{}".format(pair, lenIntersection, lenTotal)
     scores.append((pair, lenIntersection / lenTotal))
 
-scores.sort(key=lambda x: x[1]) # sort by second value
+scores.sort(key=lambda x: x[1])  # sort by second value
 # use slicing here to control which of the top scores you return to user!
 # Print rankings
 print "Rankings: "
@@ -75,7 +75,8 @@ for i, score in enumerate(scores):
     print "{}: {}   {}".format(i, score[0], score[1])
 
 # shutdown each server
-rs = (grequests.post("http://{}/shutdown".format(server)) for server in allServers)
+rs = (grequests.post("http://{}/shutdown".format(server))
+      for server in allServers)
+
 # Run asynchronous requests
 grequests.map(rs, exception_handler=exception_handler)
-# print "All done!"
