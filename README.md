@@ -29,7 +29,7 @@ Part of a senior project at Yale University.
 
 ### iAudit Team
 - Project Lead: [Ennan Zhai, PhD](http://www.cs.yale.edu/homes/zhai-ennan/)
-- Advisor: [Profesor Avi Silberschatz](http://codex.cs.yale.edu/avi/)
+- Advisor: [Professor Avi Silberschatz](http://codex.cs.yale.edu/avi/)
 - Students: William Dower, [Cameron Yick](www.cameronyick.us)
 
 ### Usage
@@ -70,6 +70,13 @@ should contain an vulnerabilities file called `vulnerabilities.txt`
 
 To run the single-computer demo:
 
+First, use a config file to put appropriate configuration files into the folders
+of each "worker server". You can pass the name of the appropriate configuration file in as a 
+command line argument.
+```
+    python setup.py iaudit-master.json
+```
+
 For each worker, spawn a worker server, using the 1st arg to specify worker id.
 
 ```
@@ -90,7 +97,7 @@ Lastly, use `trigger.py` to compute the intersection cardinalities.
     python trigger.py
 ```
 
-You can test all this in one script with
+You can test all these steps in one script with
 
 ```
     ./demo.sh
