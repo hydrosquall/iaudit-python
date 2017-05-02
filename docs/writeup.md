@@ -1,6 +1,6 @@
 # Efficient Privacy-preserving Calculation of Cloud Independence
 ## Cameron Yick
-### Advisor: Avi Silbershatz
+### Advisor: Avi Silberschatz
 ### Collaborators: William Dower, Ennan Zhai
 
 ### Motivation
